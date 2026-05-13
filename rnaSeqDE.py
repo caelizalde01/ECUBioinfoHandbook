@@ -361,7 +361,7 @@ def main():
         #"-t", "exon",     # Feature type --- Commented out for testing
         #"-g", "gene_id",  # Attribute type --- Commented out for testing
         "-a", ref_gtf,
-        "-o", "rnaseq_output/counts/allignedReads.tsv", # Output file
+        "-o", f"{args.output_dir}/counts/allignedReads.tsv", # Output file
         ]
     
     count_cmd = base_count_cmd + sam_list
@@ -408,10 +408,11 @@ def main():
     lazyeval = importr('lazyeval')
     EnhancedVolcano = importr('EnhancedVolcano')
 
-    counts_file = "rnaseq_output/counts/allignedReads.tsv"
-    metadata_file = "inputFiles/metadata.csv"
 
-    rDiag_dir = "rnaseq_output/rFigures/diagnostics"
+    counts_file = os.path.join(args.output_dir, "counts", "allignedReads.tsv")
+    metadata_file = os.path.join("inputFiles", "metadata.csv")
+
+    rDiag_dir = os.path.join(args.output_dir, "rFigures", "diagnostics")
     os.makedirs(rDiag_dir, exist_ok=True)
 
 
@@ -476,7 +477,7 @@ def main():
     ggtitle("PCA of RNA-seq Samples") +
     geom_text(aes(label=name), size=3)
 
-    ggsave("pcaGraph.png", path = "rnaseq_output/rFigures/diagnostics")
+    ggsave("pcaGraph.png", path = "{args.output_dir}/rFigures/diagnostics")
     """
 
     # Execute the code in R
@@ -490,7 +491,7 @@ def main():
 
 
     # 1. Open a PNG device and specify the full path and filename
-    png("rnaseq_output/rFigures/diagnostics/dispersionEstimates.png", width=800, height=600)
+    png("{args.output_dir}/rFigures/diagnostics/dispersionEstimates.png", width=800, height=600)
     
     # 2. Draw the base R plot (it routes directly to the PNG, skipping the pop-up)
     plotDispEsts(dds, main="Dispersion Estimates")
@@ -516,7 +517,7 @@ def main():
 
 
     # 1. Automatically extract the species from the NCBI assembly report
-    jsonl_path = 'rnaseq_output/genome_data/ncbi_dataset/data/assembly_data_report.jsonl' # Update with your path
+    jsonl_path = os.path.join(args.output_dir, "genome_data", "ncbi_dataset", "data", "assembly_data_report.jsonl") # Update with your path
     with open(jsonl_path, 'r') as f:
         # A .jsonl file contains one JSON object per line. We just need the first line.
         assembly_data = json.loads(f.readline())
@@ -547,9 +548,9 @@ def main():
     # Make exp group directories
 
     for group in experimental_groups:
-        gsea_dir = f"rnaseq_output/rFigures/results/{group}/gsea"
-        deg_dir = f"rnaseq_output/rFigures/results/{group}/deg"
-        volcano_dir = f"rnaseq_output/rFigures/results/{group}/volcanoPlot"
+        gsea_dir = f"{args.output_dir}/rFigures/results/{group}/gsea"
+        deg_dir = f"{args.output_dir}rFigures/results/{group}/deg"
+        volcano_dir = f"{args.output_dir}/rFigures/results/{group}/volcanoPlot"
         
 
         os.makedirs(gsea_dir, exist_ok=True)
@@ -586,7 +587,7 @@ def main():
         sig_res <- subset(na.omit(res), padj < 0.05 & abs(log2FoldChange) > 1)
 
         # 4. Save the significant genes to a CSV file for your records
-        write.csv(as.data.frame(sig_res), file="rnaseq_output/rFigures/results/{exp_group}/deg/Significant_DEGs_{exp_group}_vs_{control_group}.csv")
+        write.csv(as.data.frame(sig_res), file="{args.output_dir}/rFigures/results/{exp_group}/deg/Significant_DEGs_{exp_group}_vs_{control_group}.csv")
         """
 
         robjects.r(r_difExp)
@@ -621,7 +622,7 @@ def main():
             col = c('grey30', 'forestgreen', 'royalblue', 'red2'),
             legendPosition = 'right')
 
-        ggsave("volcanoPlot-{exp_group}.png", path = "rnaseq_output/rFigures/results/{exp_group}/volcanoPlot")
+        ggsave("volcanoPlot-{exp_group}.png", path = "{args.output_dir}/rFigures/results/{exp_group}/volcanoPlot")
         """
 
         robjects.r(r_volcano)
@@ -669,7 +670,7 @@ def main():
         fgseaRes_save$leadingEdge <- sapply(fgseaRes_save$leadingEdge, paste, collapse = ";")
         
         write.csv(as.data.frame(fgseaRes_save), 
-                file="rnaseq_output/rFigures/results/{exp_group}/gsea/GSEA_{exp_group}_vs_{control_group}2.csv", 
+                file="{args.output_dir}/rFigures/results/{exp_group}/gsea/GSEA_{exp_group}_vs_{control_group}2.csv", 
                 row.names=FALSE)
 
                 
@@ -694,7 +695,7 @@ def main():
                 theme_minimal()
 
                 ggsave(filename="GSEA_{exp_group}_vs_{control_group}2.png", plot=p, 
-                path="rnaseq_output/rFigures/results/{exp_group}/gsea", 
+                path="{args.output_dir}/rFigures/results/{exp_group}/gsea", 
                 width=8, height=6, bg="white")
         }} else {{
             print("No pathways had an Enrichment Score > 0 to plot.")
