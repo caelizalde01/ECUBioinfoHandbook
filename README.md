@@ -11,6 +11,9 @@ It is highly encouraged for future students to modify the guidebook to add new b
 
 The material contained in this repository is intended as a living document for the East Central University bioinformatics community. Current and future students, researchers, and faculty are invited and encouraged to revise, extend, and update the content as methodologies evolve. All contributions remain under CC-BY-SA-4.0, ensuring the document stays open and revisable in perpetuity.
 
+## Contributing
+
+Details on how to contribute to the project can be found in the [Contributing](CCONTRIBUTING.md) file contained in the repository. If you make substantial contributions, please remember to add your name to the list of contributors located at the bottom of the [Contributing](CCONTRIBUTING.md) file.
 
 ## RNAseq
 
