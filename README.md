@@ -7,6 +7,11 @@ This repository contains a folder with the current edition of the ECU Undergradu
 It is highly encouraged for future students to modify the guidebook to add new bioinformatic methodologies relevant to ECU, remove methodologies that have become irrelevant due to new technology, or add clarification where needed. It is recommended to make any edits on the original Google Document and to update the files in the GitHub Repository after completing any major revisions. Please contact your ECU research supervisor for access to the Google Document.
 
 
+## Living Document
+
+The material contained in this repository is intended as a living document for the East Central University bioinformatics community. Current and future students, researchers, and faculty are invited and encouraged to revise, extend, and update the content as methodologies evolve. All contributions remain under CC-BY-SA-4.0, ensuring the document stays open and revisable in perpetuity.
+
+
 ## RNAseq
 
 ![An Animated Flowchart of the RNAseq Differential Expression Pipeline](assets/rnaSeqDE.gif)
@@ -238,3 +243,7 @@ Additional repositories (/etc/apt/sources.list.d/):
 - Compilers: gcc 13.3.0
 - Client: Unknown python3.12 client — inxi 3.3.34
 ```
+
+## License
+   - **Code** (scripts, pipelines, configs): GPL-3.0 — see [LICENSE](LICENSE)
+   - **Written content** (guidebook text, documentation): CC-BY-SA-4.0 — see [LICENSE-docs](LICENSE-docs)
