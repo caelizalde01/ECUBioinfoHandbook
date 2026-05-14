@@ -119,9 +119,9 @@ Linux workstation well-suited for local RNA-seq pipelines (alignment, quantifica
 - **Networking:** Wi-Fi 6E (MediaTek MT7922) active; Gigabit Ethernet available — adequate for pulling large reference genomes and uploading results.
 
 **Caveats / notes:**
-- Root partition is 70% full (645 GiB / 915 GiB used). Consider offloading large datasets to the external SanDisk SSD to avoid space pressure during heavy pipeline runs.
+- My root partition is 70% full (645 GiB / 915 GiB used). At this point some data should be offloaded to an external SSD to avoid space pressure during heavy pipeline runs.
 - Swap is only 2 GiB; with 128 GiB RAM it's rarely a concern, but worth bumping if running into OOM edge cases.
-- External SSD is MBR-partitioned; reformatting to GPT + ext4 would be advisable if you plan to use it as a primary data drive.
+- My external SSD is MBR-partitioned; don't do this. Formatting to GPT + ext4 would is advisable for use as a primary data drive.
 
 ##### Full System Specs
 
