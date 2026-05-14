@@ -47,7 +47,7 @@ However, in brief, I recommend checking these five aspects at a minimum.
 
 ##### 1. **Bowtie2 PE Allignment Scores (Location: `rnaseq_output/qc/multiqc_report/multiqcreport.html`; Handbook Figure: 3.3)**
 
-n this figure, you are looking for 2 specific things. First, you want to ensure that each of your samples has enough reads. This will be indicated by the total length of the bar. What “enough” is will depend on a number of factors, including model organism, sequencing technology, long vs. short reads, transcriptomic complexity, and many other factors. It is recommended to look into this data to be sure your data is reliable. However, the current ENCODE standards for RNAseq.
+In this figure, you are looking for 2 specific things. First, you want to ensure that each of your samples has enough reads. This will be indicated by the total length of the bar. What “enough” is will depend on a number of factors, including model organism, sequencing technology, long vs. short reads, transcriptomic complexity, and many other factors. It is recommended to look into this data to be sure your data is reliable. However, the current ENCODE standards for RNAseq.
 
 You are also looking for a high amount of uniquely mapped reads. A high amount of duplicate reads means that the reads are mapping to multiple locations on the genome with similar confidence. While duplicate mapping is expected to some extent, too few unique reads can result in poor statistical significance and less reliable results. The amount of reads that is considered adequate will vary greatly based on the model organism and the disease being studied.
 
