@@ -11,7 +11,7 @@ import zipfile
 import shutil
 import datetime
 import time
-
+import importlib.util
 
 if not os.environ.get("_RPY2_ENV_FIXED"):
     r_home = subprocess.run(["R", "RHOME"], capture_output=True, text=True).stdout.strip()
@@ -51,17 +51,34 @@ def run_command(command, description):
 
 
 
-def check_tools(tools):
+def check_tools(cli_tools, python_packages, r_packages):
     """
-    Verify that necessary tools are installed and available in PATH.
+    Verify that necessary tools/packages are installed.
+    - cli_tools: dict of {display_name: binary_name} for PATH executables
+    - python_packages: list of importable Python package names
+    - r_packages: list of R package names (checked via rpy2)
     """
+    import importlib.util
     missing = []
-    for tool in tools:
-        if shutil.which(tool) is None:
-            missing.append(tool)
-    
+
+    for display_name, binary in cli_tools.items():
+        if shutil.which(binary) is None:
+            missing.append(display_name)
+
+    for pkg in python_packages:
+        if importlib.util.find_spec(pkg) is None:
+            missing.append(pkg)
+
+    for pkg in r_packages:
+        result = subprocess.run(
+            ["Rscript", "-e", f"if (!requireNamespace('{pkg}', quietly=TRUE)) quit(status=1)"],
+            capture_output=True
+        )
+        if result.returncode != 0:
+            missing.append(pkg)
+
     if missing:
-        print(f"[ERROR] The following tools are missing from your PATH: {', '.join(missing)}")
+        print(f"[ERROR] The following tools are missing: {', '.join(missing)}")
         print("Please install them (e.g., via Conda) before running this script.")
         sys.exit(1)
 
@@ -134,12 +151,21 @@ def main():
 
     # 0. Pre-flight check
     preflight_start_time = datetime.datetime.now()
-    print(f"Preflight Start: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S)")}")
-    print(f"Run Time: {preflight_start_time - script_start_time}\n\n")
+    print(f"Preflight Start: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
 
-    required_tools = ["datasets", "hisat2-build", "hisat2", "featureCounts", "multiqc", "fastqc"]
-    #, "rpy2", "r"
-    check_tools(required_tools)
+    cli_tools = {
+        "python":           "python",
+        "ncbi-datasets-cli":"datasets",
+        "hisat2":           "hisat2",
+        "subread":          "featureCounts",
+        "fastqc":           "fastqc",
+        "multiqc":          "multiqc",
+        "r-base":           "Rscript",
+    }
+    python_packages = ["pandas", "rpy2"]
+    r_packages = ["tidyverse", "lazyeval", "ggplot2", "pheatmap", "DESeq2", "fgsea", "msigdbr", "EnhancedVolcano"]
+
+    check_tools(cli_tools, python_packages, r_packages)
 
     preflight_end_time = datetime.datetime.now()
     print(f"Preflight End: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S)")}")
@@ -401,7 +427,6 @@ def main():
     tidyverse = importr('tidyverse')
     deseq2 = importr('DESeq2')
     ggplot2 = importr('ggplot2')
-    pheatmap = importr('pheatmap')
     dplyr = importr('dplyr')
     fgsea = importr('fgsea')
     msigdbr = importr('msigdbr')
@@ -517,7 +542,7 @@ def main():
 
 
     # 1. Automatically extract the species from the NCBI assembly report
-    jsonl_path = os.path.join(args.output_dir, "genome_data", "ncbi_dataset", "data", "assembly_data_report.jsonl") # Update with your path
+    jsonl_path = os.path.join(args.output_dir, "genome_data", "ncbi_dataset", "data", "assembly_data_report.jsonl")
     with open(jsonl_path, 'r') as f:
         # A .jsonl file contains one JSON object per line. We just need the first line.
         assembly_data = json.loads(f.readline())
@@ -549,7 +574,7 @@ def main():
 
     for group in experimental_groups:
         gsea_dir = f"{args.output_dir}/rFigures/results/{group}/gsea"
-        deg_dir = f"{args.output_dir}rFigures/results/{group}/deg"
+        deg_dir = f"{args.output_dir}/rFigures/results/{group}/deg"
         volcano_dir = f"{args.output_dir}/rFigures/results/{group}/volcanoPlot"
         
 

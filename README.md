@@ -4,10 +4,12 @@ The ECU bioinformatic guidebook is a comprehensive "how to" guide for common bio
 
 This repository consists of a folder containing the current edition of the *ECU Undergraduate Bioinformatic Guidebook* as well as any example scripts currently availible in the edition. RNAseq is currently the only example pipeline availible. 
 
-It is highly encouraged for future students to modify the guidebook to add new bioinformatic methodologies relevent to ECU, remove methodologies that have been made irrelevent by new technology, or to add clarification where needed.
+It is highly encouraged for future students to modify the guidebook to add new bioinformatic methodologies relevent to ECU, remove methodologies that have been made irrelevent by new technology, or to add clarification where needed. It is recommended to make any edits on the original Google Document and to update the files in the GitHub Repository after completing any major revisions. Please contact your ECU research supervisor for access to the Google Document.
 
 
 ## RNAseq
+
+![An Animated Flowchart of the RNAseq Differential Expression Pipeline](assets/rnaSeqDE.gif)
 
 ### Quickstart Guide
 
@@ -15,7 +17,7 @@ It is highly encouraged for future students to modify the guidebook to add new b
 
 2. Create a fresh conda environment using the following command:
 
-`conda create -n <environment_name> -c conda-forge -c bioconda python ncbi-datasets-cli hisat2 subread multiqc pandas r-base fastqc rpy2 && conda activate <the_same_environment_name>`
+`conda create -n <environment_name> -c conda-forge -c bioconda python ncbi-datasets-cli hisat2 subread multiqc pandas fastqc rpy2 r-base r-tidyverse r-lazyeval r-ggplot2 r-pheatmap r-msigdbr bioconductor-deseq2 bioconductor-fgsea bioconductor-enhancedvolcano -y && conda activate <the_same_environment_name> -y` 
 
 3. Download your experimental FASTQ files to the "files" directory. Ensure that forward and reverse reads end in "`_1`" and "`_2`" respectively. (You can rename if needed)
 
