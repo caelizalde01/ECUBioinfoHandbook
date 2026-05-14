@@ -11,6 +11,10 @@ It is highly encouraged for future students to modify the guidebook to add new b
 
 ![An Animated Flowchart of the RNAseq Differential Expression Pipeline](assets/rnaSeqDE.gif)
 
+
+---
+
+
 ### Quickstart Guide
 
 1. Download and extract the latest release of "*RNAseqTemplate*" to an empty directory.
@@ -32,6 +36,8 @@ It is highly encouraged for future students to modify the guidebook to add new b
 Ensure you have sufficient storage on your computer to handle the experimental FASTQs and files created by the pipeline. After the pipeline completes, your analysis files can be found in the created "rnaseq_output" directory.
 
 If there are any questions, please refer to the handbook located in the GuidebookReading folder of this git repository.
+
+
 
 #### Important Quality Checks
 
@@ -81,7 +87,10 @@ Secondly, you should see that gene estimate points and the final estimates shoul
 \*\* Exemptions may be made for samples where supporting short read RNA-seq data is available to validate the low gene count, given that short read samples are from the same cell type/cell line and pass all ENCODE standards
 
 
+
 *Table 1: A table showing curent ENCODE standards for sequencing depth for mammalian long read RNAseq experiments adapted from the [ENCODE Project Website](https://www.encodeproject.org/rna-seq/long-read-rna-seq/). True acceptable sequencing depth will depend on a variety of factors related to experimental goals and design.*
+
+---
 
 ### Hardware Requirements
 
