@@ -1,10 +1,10 @@
 # ECU Bioinformatic Guidebook
 
-The ECU bioinformatic guidebook is a comprehensive "how to" guide for common bioinformatic methodology targeted towards East Central University undergraduates looking to perform bioinformatic analysis. The reading is targeted towards biology undergraduates without a strong foundation in coding and computer science.
+The ECU bioinformatic guidebook is a comprehensive “how to” guide for common bioinformatic methodology targeted towards East Central University undergraduates looking to perform bioinformatic analysis. The reading is targeted towards biology undergraduates without a strong foundation in coding and computer science.
 
-This repository consists of a folder containing the current edition of the *ECU Undergraduate Bioinformatic Guidebook* as well as any example scripts currently availible in the edition. RNAseq is currently the only example pipeline availible. 
+This repository contains a folder with the current edition of the ECU Undergraduate Bioinformatic Guidebook, along with any example scripts available in the edition. RNAseq is currently the only example pipeline available.
 
-It is highly encouraged for future students to modify the guidebook to add new bioinformatic methodologies relevent to ECU, remove methodologies that have been made irrelevent by new technology, or to add clarification where needed. It is recommended to make any edits on the original Google Document and to update the files in the GitHub Repository after completing any major revisions. Please contact your ECU research supervisor for access to the Google Document.
+It is highly encouraged for future students to modify the guidebook to add new bioinformatic methodologies relevant to ECU, remove methodologies that have become irrelevant due to new technology, or add clarification where needed. It is recommended to make any edits on the original Google Document and to update the files in the GitHub Repository after completing any major revisions. Please contact your ECU research supervisor for access to the Google Document.
 
 
 ## RNAseq
@@ -31,7 +31,57 @@ It is highly encouraged for future students to modify the guidebook to add new b
 
 Ensure you have sufficient storage on your computer to handle the experimental FASTQs and files created by the pipeline. After the pipeline completes, your analysis files can be found in the created "rnaseq_output" directory.
 
-If there are any questions please refer to the handbook located in the GuidebookReading folder of this git repository.
+If there are any questions, please refer to the handbook located in the GuidebookReading folder of this git repository.
+
+#### Important Quality Checks
+
+Please note that not all results are good results. It is essential to check the quality of your RNAseq data before drawing any conclusions from the produced figures. Details on what to look for can be found in Chapter 3 of the handbook (found in the “GuidebookReading” directory) and I recommend fully reading that section for a detailed explanation on what to look for, what went wrong if anything, and how to fix it (if fixable).
+
+However, in brief, I recommend checking these five aspects at a minimum. 
+
+##### 1. **Bowtie2 PE Allignment Scores (Location: `rnaseq_output/qc/multiqc_report/multiqcreport.html`; Handbook Figure: 3.3)**
+
+n this figure, you are looking for 2 specific things. First, you want to ensure that each of your samples has enough reads. This will be indicated by the total length of the bar. What “enough” is will depend on a number of factors, including model organism, sequencing technology, long vs. short reads, transcriptomic complexity, and many other factors. It is recommended to look into this data to be sure your data is reliable. However, the current ENCODE standards for RNAseq.
+
+You are also looking for a high amount of uniquely mapped reads. A high amount of duplicate reads means that the reads are mapping to multiple locations on the genome with similar confidence. While duplicate mapping is expected to some extent, too few unique reads can result in poor statistical significance and less reliable results. The amount of reads that is considered adequate will vary greatly based on the model organism and the disease being studied.
+
+
+##### 2. **FastQC: Per Sequence Quality Scores (Location: `rnaseq_output/qc/multiqc_report/multiqcreport.html`; Handbook Figure: 3.7)**
+
+This figure gives you an idea of the overall quality of your reads. A low mean quality score (peaks in the red and yellow sections) indicates that we are less confident that our measured nucleotides are what we say they are. This could be for a variety of reasons described in Chapter 3 of the bioinformatic handbook.
+
+
+##### 3. **FastQC: Per Sequence GC Content (Location: `rnaseq_output/qc/multiqc_report/multiqcreport.html`; Handbook Figure: 3.11)**
+
+The graph should resemble a normal distribution with a single peak. A bimodal distribution (two peaks) is a strong indicator of sample contamination. The likely culprate is rRNA contamination; however, overrepresented samples (found at the bottom of the MultiQC report) can be put into [NCBI's BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) or the sample can be put through [Kraken2](https://github.com/DerrickWood/kraken2) to be sure.
+
+
+##### 4. **PCA Plot (Location `rnaseq_output/rFigures/diagnostics/pcaGraph.png`; Handbook Figure: 3.15)**
+
+Experimental groups should be spatially clustered and isolated from all other experimental groups. Inadequate clustering is an indication that the measured experimental variables are a poor representation of phenotypic variation.
+
+
+##### 5. **Dispersion Estimates Plot (Location: `rnaseq_output/rFigures/diagnostics/dispersionEstimates.png`; Handbook Figure 3.19)**
+
+The fitted trend line should drop below 1e-2. A high trendline is an indication that sample-to-sample variability is greater than expected, which could influence results or be a sign of contamination. However, the acceptable breakpoint for where the line should fall below varies based on the model organism you are looking at.
+
+Secondly, you should see that gene estimate points and the final estimates should be spatially close together. Large discrepancies could indicate that you have too small a sample size or an outlier is present.
+
+
+
+**Table 1: Current Encode RNAseq Standards**
+| Resulting data status | Sequencing depth | Mapping rate | Replicate concordance (Spearman correlation) | Number of GENCODE genes detected |
+|---|---|---|---|---|
+| Good | ≥ 600,000 FLNC* reads/replicate | ≥ 90% mapped reads | ≥ 0.8 | ≥ 8,000 genes detected/replicate |
+| Acceptable | 400,000–600,000 FLNC reads/replicate | 60–90% mapped reads | 0.6–0.8 | 4,000–8,000 genes detected/replicate** |
+| Poor | < 400,000 FLNC reads/replicate | < 60% mapped reads | < 0.6 | < 4,000 genes detected/replicate** |
+
+\* full-length nonchimeric reads
+
+\*\* Exemptions may be made for samples where supporting short read RNA-seq data is available to validate the low gene count, given that short read samples are from the same cell type/cell line and pass all ENCODE standards
+
+
+*Table 1: A table showing curent ENCODE standards for sequencing depth for mammalian long read RNAseq experiments adapted from the [ENCODE Project Website](https://www.encodeproject.org/rna-seq/long-read-rna-seq/). True acceptable sequencing depth will depend on a variety of factors related to experimental goals and design.*
 
 ### Hardware Requirements
 
